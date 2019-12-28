@@ -1,15 +1,15 @@
 ﻿<fw:AcrylicWindow x:Class="WpfApp.MainWindow"
-                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                   xmlns:local="clr-namespace:WpfApp"
-                   xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
-                   mc:Ignorable="d"
-                   Title="Yohane"
-                   Width="320" Height="390"
-                   TintColor="{x:Static fw:AccentColors.ImmersiveSystemAccent}"
-                   AcrylicWindowStyle="None">
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  xmlns:local="clr-namespace:WpfApp"
+                  xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+                  mc:Ignorable="d"
+                  Title="Yohane"
+                  Width="320" Height="390"
+                  TintColor="{x:Static fw:AccentColors.ImmersiveSystemAccent}"
+                  AcrylicWindowStyle="None">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -64,7 +64,9 @@
 
                             <TextBlock Grid.Row="1"
                                        x:Name="Text"
-                                       Text="{Binding Text}" />
+                                       Text="{Binding Name}"
+                                       FontSize="16"
+                                       Foreground="Azure" />
                         </Grid>
                     </Button>
                 </DataTemplate>
@@ -83,10 +85,9 @@
             </ItemsControl.ItemContainerStyle>
         </ItemsControl>
 
-        <ComboBox Grid.Row="1"
-                  IsEditable="True"
-                  IsReadOnly="False"
-                  Margin="4"
-                  FontSize="20" />
+        <TextBox Grid.Row="1"
+                 x:Name="TextBox"
+                 Margin="4"
+                 FontSize="20" />
     </Grid>
 </fw:AcrylicWindow>
