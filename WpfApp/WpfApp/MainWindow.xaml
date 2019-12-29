@@ -5,11 +5,43 @@
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                   xmlns:local="clr-namespace:WpfApp"
                   xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+                  xmlns:sys="clr-namespace:System;assembly=mscorlib"
                   mc:Ignorable="d"
                   Title="Yohane"
                   Width="320" Height="390"
                   TintColor="{x:Static fw:AccentColors.ImmersiveSystemAccent}"
+                  Loaded="MainWindow_OnLoaded"
                   AcrylicWindowStyle="None">
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="GotKeyboardFocus">
+            <BeginStoryboard>
+                <Storyboard Duration="00:00:10" Storyboard.TargetProperty="Opacity">
+                    <DoubleAnimation From="0.2" To="1"/>
+                </Storyboard>
+            </BeginStoryboard>
+            
+            <BeginStoryboard>
+                <Storyboard Duration="00:00:20" Storyboard.TargetProperty="(Window.Top)">
+                    <!-- Bound values can't be used this early apparently, so size is manual -->
+                    <DoubleAnimation From="864" To="434"/>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+        
+        <EventTrigger RoutedEvent="LostKeyboardFocus">
+            <BeginStoryboard>
+                <Storyboard Duration="00:00:10" Storyboard.TargetProperty="Opacity">
+                    <DoubleAnimation From="1" To="0.2"/>
+                </Storyboard>
+            </BeginStoryboard>
+            
+            <BeginStoryboard>
+                <Storyboard Duration="00:00:20" Storyboard.TargetProperty="(Window.Top)">
+                    <DoubleAnimation From="434" To="864"/>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Window.Triggers>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -85,9 +117,16 @@
             </ItemsControl.ItemContainerStyle>
         </ItemsControl>
 
-        <TextBox Grid.Row="1"
-                 x:Name="TextBox"
+        <!-- https://stackoverflow.com/a/1373439 -->
+        <ComboBox xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                  Grid.Row="1"
+                 x:Name="ComboBox"
+                 IsEditable="True"
                  Margin="4"
-                 FontSize="20" />
+                 FontSize="20">
+            <ComboBox.Resources>
+                <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">0</sys:Double>
+            </ComboBox.Resources>
+        </ComboBox>
     </Grid>
 </fw:AcrylicWindow>

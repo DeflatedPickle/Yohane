@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Management;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 using WpfScreenHelper;
@@ -30,12 +31,9 @@ namespace WpfApp
 
             public GridItem(string path, int row, int column)
             {
-                string result;
-                PathDict.TryGetValue(path, out result);
+                PathDict.TryGetValue(path, out var result);
 
                 Name = result == null ? path.Split('\\').Last() : result.Split('\\').Last().Split('.').First();
-                MessageBox.Show(Name);
-                
                 Path = path;
 
                 var image = (Icon) null;
@@ -49,7 +47,7 @@ namespace WpfApp
                     Console.WriteLine(e);
                 }
 
-                Image = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(image.Handle, Int32Rect.Empty,
+                Image = Imaging.CreateBitmapSourceFromHIcon(image.Handle, Int32Rect.Empty,
                     BitmapSizeOptions.FromEmptyOptions());
 
                 Row = row;
@@ -65,6 +63,7 @@ namespace WpfApp
         public MainWindow()
         {
             InitializeComponent();
+            Topmost = true;
 
             PathDict = new Dictionary<string, string>();
 
@@ -75,6 +74,7 @@ namespace WpfApp
                     if (path != null)
                     {
                         PathDict[path] = s;
+                        ComboBox.Items.Add(s.Split('\\').Last().Split('.').First());
                     }
                 });
 
@@ -90,6 +90,7 @@ namespace WpfApp
                         if (displayName != null && installLocation != null && !PathDict.ContainsKey(displayName))
                         {
                             PathDict[installLocation] = displayName;
+                            ComboBox.Items.Add(displayName);
                         }
                     }
                 }
@@ -108,18 +109,19 @@ namespace WpfApp
                             if (!PathDict.ContainsKey(name))
                             {
                                 PathDict[path] = name;
+                                ComboBox.Items.Add(name);
                             }
                         });
                     }
                 }
                 else
                 {
-                    // Get the fancy name from the StartMenu directory, if there is one
                     var name = path.Split('\\').Last();
 
                     if (!PathDict.ContainsKey(name))
                     {
-                        PathDict[name] = path;
+                        PathDict[path] = name;
+                        ComboBox.Items.Add(name);
                     }
                 }
             }
@@ -131,20 +133,10 @@ namespace WpfApp
             };
         }
 
-        protected override void OnContentRendered(EventArgs e)
+        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            base.OnContentRendered(e);
-
-            var monitor = Screen.FromPoint(Mouse.GetPosition(this));
-            Left = monitor.WorkingArea.Width / 2 - Width / 2;
-            Top = monitor.WorkingArea.Bottom - Height;
-        }
-
-        protected override void OnDeactivated(EventArgs e)
-        {
-            base.OnDeactivated(e);
-
-            WindowState = WindowState.Minimized;
+            Left = Screen.PrimaryScreen.WorkingArea.Width / 2 - Width / 2;
+            Top = Screen.PrimaryScreen.WorkingArea.Bottom;
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
