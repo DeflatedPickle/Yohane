@@ -97,12 +97,15 @@
     </Compile>
     <Compile Include="DirectoryUtil.cs" />
     <Compile Include="FileUtil.cs" />
+    <Compile Include="GridUtil.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PathUtil.cs" />
+    <Compile Include="ProcessUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

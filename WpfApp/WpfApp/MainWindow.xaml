@@ -1,4 +1,5 @@
 ﻿<fw:AcrylicWindow x:Class="WpfApp.MainWindow"
+                  x:Name="Window"
                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -11,119 +12,57 @@
                   Width="320" Height="390"
                   TintColor="{x:Static fw:AccentColors.ImmersiveSystemAccent}"
                   Loaded="MainWindow_OnLoaded"
+                  KeyDown="MainWindow_OnKeyDown"
                   AcrylicWindowStyle="None">
-    <Window.Triggers>
-        <EventTrigger RoutedEvent="GotKeyboardFocus">
-            <BeginStoryboard>
-                <Storyboard Duration="00:00:10" Storyboard.TargetProperty="Opacity">
-                    <DoubleAnimation From="0.2" To="1"/>
-                </Storyboard>
-            </BeginStoryboard>
-            
-            <BeginStoryboard>
-                <Storyboard Duration="00:00:20" Storyboard.TargetProperty="(Window.Top)">
-                    <!-- Bound values can't be used this early apparently, so size is manual -->
-                    <DoubleAnimation From="864" To="434"/>
-                </Storyboard>
-            </BeginStoryboard>
-        </EventTrigger>
+    <Window.Resources>
+        <Storyboard x:Key="Show"
+                    TargetName="Window">
+            <DoubleAnimation Duration="00:00:00:01" From="0.2" To="1"
+                             Storyboard.TargetProperty="Opacity" />
+        </Storyboard>
         
-        <EventTrigger RoutedEvent="LostKeyboardFocus">
-            <BeginStoryboard>
-                <Storyboard Duration="00:00:10" Storyboard.TargetProperty="Opacity">
-                    <DoubleAnimation From="1" To="0.2"/>
-                </Storyboard>
-            </BeginStoryboard>
-            
-            <BeginStoryboard>
-                <Storyboard Duration="00:00:20" Storyboard.TargetProperty="(Window.Top)">
-                    <DoubleAnimation From="434" To="864"/>
-                </Storyboard>
-            </BeginStoryboard>
-        </EventTrigger>
-    </Window.Triggers>
+        
+        <Storyboard x:Key="Hide"
+                    TargetName="Window"
+                    Duration="00:00:04">
+            <DoubleAnimation Duration="00:00:00:01" From="1" To="0.2"
+                             Storyboard.TargetProperty="Opacity" />
+        </Storyboard>
+    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        
+        <Grid x:Name="Grid"
+              fw:PointerTracker.Enabled="True"
+              Background="#00FFFFFF"
+              Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80" />
+                <RowDefinition Height="80" />
+                <RowDefinition Height="80" />
+                <RowDefinition Height="80" />
+            </Grid.RowDefinitions>
 
-        <ItemsControl x:Name="GridItems"
-                      Grid.Row="0">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Grid fw:PointerTracker.Enabled="True"
-                          Background="#00FFFFFF">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="80" />
-                            <RowDefinition Height="80" />
-                            <RowDefinition Height="80" />
-                            <RowDefinition Height="80" />
-                        </Grid.RowDefinitions>
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="80" />
-                            <ColumnDefinition Width="80" />
-                            <ColumnDefinition Width="80" />
-                            <ColumnDefinition Width="80" />
-                        </Grid.ColumnDefinitions>
-                    </Grid>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Button
-                        Margin="4"
-                        x:Name="Button"
-                        Click="ButtonBase_OnClick"
-                        ToolTip="{Binding Path}"
-                        Style="{StaticResource ButtonRevealStyle}">
-                        <Button.ContextMenu>
-                            <ContextMenu ItemsSource="{Binding ContextMenu}" />
-                        </Button.ContextMenu>
-
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <Image Grid.Row="0"
-                                   Source="{Binding Image}"
-                                   RenderOptions.BitmapScalingMode="Fant" />
-
-                            <TextBlock Grid.Row="1"
-                                       x:Name="Text"
-                                       Text="{Binding Name}"
-                                       FontSize="16"
-                                       Foreground="Azure" />
-                        </Grid>
-                    </Button>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-
-            <ItemsControl.ItemContainerStyle>
-                <Style>
-                    <Style.Setters>
-                        <Setter Property="Grid.Row" Value="{Binding Row}" />
-                        <Setter Property="Grid.Column" Value="{Binding Column}" />
-
-                        <Setter Property="Grid.RowSpan" Value="{Binding RowSpan}" />
-                        <Setter Property="Grid.ColumnSpan" Value="{Binding ColumnSpan}" />
-                    </Style.Setters>
-                </Style>
-            </ItemsControl.ItemContainerStyle>
-        </ItemsControl>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="80" />
+            </Grid.ColumnDefinitions>
+        </Grid>
 
         <!-- https://stackoverflow.com/a/1373439 -->
         <ComboBox xmlns:sys="clr-namespace:System;assembly=mscorlib"
                   Grid.Row="1"
-                 x:Name="ComboBox"
-                 IsEditable="True"
-                 Margin="4"
-                 FontSize="20">
+                  x:Name="ComboBox"
+                  IsEditable="True"
+                  Visibility="Hidden"
+                  Margin="4"
+                  FontSize="20">
             <ComboBox.Resources>
                 <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">0</sys:Double>
             </ComboBox.Resources>
