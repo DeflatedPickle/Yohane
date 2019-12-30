@@ -23,6 +23,18 @@ namespace WpfApp
             Grid.Children.Add(ItemUtil.AddButton(@"C:\Program Files\Internet Explorer\iexplore.exe", 0, 0, 1, 2));
             Grid.Children.Add(ItemUtil.AddButton(@"C:\Windows\system32\notepad.exe", 0, 2));
             Grid.Children.Add(ItemUtil.AddButton(@"C:\Windows\system32\mspaint.exe", 1, 2, 2, 2));
+            
+            Grid.Children.Add(ItemUtil.AddFolder("Folder", new []
+            {
+                ItemUtil.AddButton(@"C:\Windows\system32\notepad.exe", 0, 0, hasLabel: false),
+                ItemUtil.AddButton(@"C:\Windows\system32\mspaint.exe", 1, 1, hasLabel: false),
+                
+                ItemUtil.AddFolder("Other Folder", new []
+                {
+                    ItemUtil.AddButton(@"C:\Windows\system32\notepad.exe", 0, 0, hasLabel: false),
+                    ItemUtil.AddButton(@"C:\Windows\system32\mspaint.exe", 1, 1, hasLabel: false),
+                }, 2, 2, 0, 1, 0)
+            }, 2, 2, 2, 1, 1));
         }
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
