@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using Microsoft.Win32;
 
 namespace WpfApp
@@ -14,18 +16,25 @@ namespace WpfApp
         public static List<string> DiscoverPaths()
         {
             var paths = new List<string>();
-            
-            DirectoryUtil.RecurseDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                s =>
-                {
-                    var path = FileUtil.GetShortcutTarget(s);
-                    if (path != null)
+
+            foreach (var directory in new [] {
+                Environment.SpecialFolder.ApplicationData,
+                Environment.SpecialFolder.StartMenu,
+                Environment.SpecialFolder.CommonStartMenu
+            })
+            {
+                DirectoryUtil.RecurseDirectory(Environment.GetFolderPath(directory),
+                    s =>
                     {
-                        var cleanPath = s.Split('\\').Last().Split('.').First();
-                        PathDict[path] = cleanPath;
-                        paths.Add(cleanPath);
-                    }
-                });
+                        var path = FileUtil.GetShortcutTarget(s);
+                        if (path != null)
+                        {
+                            var cleanPath = s.Split('\\').Last().Split('.').First();
+                            PathDict[path] = cleanPath;
+                            paths.Add(cleanPath);
+                        }
+                    });
+            }
 
             using (var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"))
             {

@@ -54,7 +54,7 @@ namespace WpfApp
             if (e.OldFocus == null)
             {
                 var show = new DoubleAnimation(
-                    Screen.PrimaryScreen.WorkingArea.Bottom,
+                    Screen.PrimaryScreen.Bounds.Bottom,
                     Screen.PrimaryScreen.WorkingArea.Bottom - Height,
                     new Duration(new TimeSpan(0, 0, 0, 1)));
                 BeginAnimation(TopProperty, show);
@@ -69,7 +69,7 @@ namespace WpfApp
             {
                 var hide = new DoubleAnimation(
                     Screen.PrimaryScreen.WorkingArea.Bottom - Height,
-                    Screen.PrimaryScreen.WorkingArea.Bottom,
+                    Screen.PrimaryScreen.Bounds.Bottom,
                     new Duration(new TimeSpan(0, 0, 0, 1)));
                 BeginAnimation(TopProperty, hide);
                 
