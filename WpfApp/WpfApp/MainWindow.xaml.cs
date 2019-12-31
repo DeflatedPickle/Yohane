@@ -20,19 +20,19 @@ namespace WpfApp
                 ComboBox.Items.Add(path);
             }
 
-            Grid.Children.Add(ItemUtil.AddButton(@"C:\Program Files\Internet Explorer\iexplore.exe", 0, 0, 1, 2));
-            Grid.Children.Add(ItemUtil.AddButton(@"C:\Windows\system32\notepad.exe", 0, 2));
-            Grid.Children.Add(ItemUtil.AddButton(@"C:\Windows\system32\mspaint.exe", 1, 2, 2, 2));
+            Grid.Children.Add(GridUtil.AddButton(@"C:\Program Files\Internet Explorer\iexplore.exe", 0, 0, 1, 2));
+            Grid.Children.Add(GridUtil.AddButton(@"C:\Windows\system32\notepad.exe", 0, 2));
+            Grid.Children.Add(GridUtil.AddButton(@"C:\Windows\system32\mspaint.exe", 1, 2, 2, 2));
             
-            Grid.Children.Add(ItemUtil.AddFolder("Folder", new []
+            Grid.Children.Add(GridUtil.AddFolder("Folder", new []
             {
-                ItemUtil.AddButton(@"C:\Windows\system32\notepad.exe", 0, 0, hasLabel: false),
-                ItemUtil.AddButton(@"C:\Windows\system32\mspaint.exe", 1, 1, hasLabel: false),
+                GridUtil.AddButton(@"C:\Windows\system32\notepad.exe", 0, 0, hasLabel: false),
+                GridUtil.AddButton(@"C:\Windows\system32\mspaint.exe", 1, 1, hasLabel: false),
                 
-                ItemUtil.AddFolder("Other Folder", new []
+                GridUtil.AddFolder("Other Folder", new []
                 {
-                    ItemUtil.AddButton(@"C:\Windows\system32\notepad.exe", 0, 0, hasLabel: false),
-                    ItemUtil.AddButton(@"C:\Windows\system32\mspaint.exe", 1, 1, hasLabel: false),
+                    GridUtil.AddButton(@"C:\Windows\system32\notepad.exe", 0, 0, hasLabel: false),
+                    GridUtil.AddButton(@"C:\Windows\system32\mspaint.exe", 1, 1, hasLabel: false),
                 }, 2, 2, 0, 1, 0)
             }, 2, 2, 2, 1, 1));
         }
@@ -40,7 +40,7 @@ namespace WpfApp
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
             Left = Screen.PrimaryScreen.WorkingArea.Width / 2 - Width / 2;
-            // Top = Screen.PrimaryScreen.WorkingArea.Bottom;
+            Top = Screen.PrimaryScreen.WorkingArea.Bottom;
         }
 
         private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
@@ -87,6 +87,16 @@ namespace WpfApp
                 
                 (FindResource("Hide") as Storyboard).Begin();
             }
+        }
+
+        private void Grid_OnDragOver(object sender, DragEventArgs e)
+        {
+            var button = e.Data.GetData("button") as Button;
+            var point = GridUtil.GetPointFromPos(e.GetPosition(button.Parent as UIElement), Grid);
+            
+            // TODO: Check if the cell is taken first
+            Grid.SetColumn(button, point.X);
+            Grid.SetRow(button, point.Y);
         }
     }
 }

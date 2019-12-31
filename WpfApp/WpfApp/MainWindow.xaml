@@ -37,6 +37,8 @@
         </Grid.RowDefinitions>
         
         <Grid x:Name="Grid"
+              AllowDrop="True"
+              DragOver="Grid_OnDragOver"
               fw:PointerTracker.Enabled="True"
               Background="#00FFFFFF"
               Grid.Row="0">

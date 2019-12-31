@@ -4,16 +4,22 @@ using System.Drawing;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Brushes = System.Windows.Media.Brushes;
 using Image = System.Windows.Controls.Image;
+using Point = System.Windows.Point;
 
 namespace WpfApp
 {
-    public class ItemUtil
+    public struct Pair
+    {
+        public int X;
+        public int Y;
+    }
+    
+    public class GridUtil
     {
         public static Button AddButton(string path, int row, int column, int rowspan = 1, int columnspan = 1, bool hasLabel = true)
         {
@@ -28,6 +34,14 @@ namespace WpfApp
             {
                 ProcessUtil.OpenProcess(path);
             };
+            
+            button.PreviewMouseLeftButtonDown += ((s, e) =>
+            {
+                var dataObject = new DataObject();
+                dataObject.SetData("button", s);
+
+                DragDrop.DoDragDrop(button, dataObject, DragDropEffects.Move);
+            });
 
             var buttonContent = new Grid();
             buttonContent.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0.5, GridUnitType.Star) });
@@ -116,6 +130,40 @@ namespace WpfApp
             Grid.SetColumnSpan(button, columnspan);
 
             return button;
+        }
+
+        public static Pair GetPointFromPos(Point point, Grid grid)
+        {
+            var rowStart = 0.0;
+            var columnStart = 0.0;
+
+            var row = 0;
+            var column = 0;
+
+            foreach (var rowDefinition in grid.RowDefinitions)
+            {
+                rowStart += rowDefinition.ActualHeight;
+
+                if (point.Y < rowStart)
+                {
+                    break;
+                }
+                row++;
+            }
+                
+            foreach (var columnDefinition in grid.ColumnDefinitions)
+            {
+                columnStart += columnDefinition.ActualWidth;
+
+                if (point.X < columnStart)
+                {
+                    break;
+                }
+
+                column++;
+            }
+            
+            return new Pair { X = column, Y = row};
         }
     }
 }
